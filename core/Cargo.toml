@@ -1,0 +1,23 @@
+[package]
+name = "noot_core"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+python = ["dep:pyo3"]
+
+[dependencies]
+notify-debouncer-full = { version = "0.7.0", features = ["crossbeam-channel"] }
+notify = { version = "8", features = ["crossbeam-channel"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4.43", features = ["serde"] }
+regex = "1.12.3"
+semver = "1.0.27"
+anyhow = "1.0.101"
+log = "0.4.29"
+simplelog = "0.12.2"
+windows = { version = "0.62.2", features = ["Win32", "Win32_Security", "Win32_System", "Win32_Security_Authorization", "Win32_System_Diagnostics", "Win32_System_ProcessStatus", "Win32_System_Threading", "Win32_System_Diagnostics_Debug"] }
+dashmap = "6.1.0"
+crossbeam = "0.8.4"
+pyo3 = { version = "0.28.2", optional = true}

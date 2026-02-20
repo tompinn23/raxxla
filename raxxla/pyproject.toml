@@ -1,0 +1,21 @@
+[build-system]
+requires = ["maturin>=1.11,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "raxxla"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["version"]
+dependencies = [
+    "anyio>=4.5.2",
+    "trio>=0.27.0",
+]
+
+[tool.maturin]
+module-name = "raxxla._rust_watcher"
+bindings = "pyo3"

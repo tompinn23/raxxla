@@ -1,0 +1,15 @@
+[package]
+name = "raxxla"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "_rust_watcher"
+crate-type = ["cdylib"]
+
+[dependencies]
+noot_core = { path = "../core", features = ["python"]}
+pyo3 = "0.28.2"
+crossbeam = "0.8.4"
+anyhow = "1.0.101"
+pythonize = "0.28.0"

@@ -1,0 +1,680 @@
+#![allow(clippy::redundant_closure_call)]
+#![allow(clippy::needless_lifetimes)]
+#![allow(clippy::match_single_binding)]
+#![allow(clippy::clone_on_copy)]
+
+#[doc = r" Error types."]
+pub mod error {
+    #[doc = r" Error from a `TryFrom` or `FromStr` implementation."]
+    pub struct ConversionError(::std::borrow::Cow<'static, str>);
+    impl ::std::error::Error for ConversionError {}
+    impl ::std::fmt::Display for ConversionError {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+            ::std::fmt::Display::fmt(&self.0, f)
+        }
+    }
+    impl ::std::fmt::Debug for ConversionError {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
+            ::std::fmt::Debug::fmt(&self.0, f)
+        }
+    }
+    impl From<&'static str> for ConversionError {
+        fn from(value: &'static str) -> Self {
+            Self(value.into())
+        }
+    }
+    impl From<String> for ConversionError {
+        fn from(value: String) -> Self {
+            Self(value.into())
+        }
+    }
+}
+#[doc = "`ComponentsItem`"]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"type\": \"object\","]
+#[doc = "  \"required\": ["]
+#[doc = "    \"Count\","]
+#[doc = "    \"Name\","]
+#[doc = "    \"OwnerID\""]
+#[doc = "  ],"]
+#[doc = "  \"properties\": {"]
+#[doc = "    \"Count\": {"]
+#[doc = "      \"title\": \"Count\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        114,"]
+#[doc = "        2,"]
+#[doc = "        4"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"MissionID\": {"]
+#[doc = "      \"title\": \"MissionID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        836665448,"]
+#[doc = "        836922172,"]
+#[doc = "        836961350"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"Name\": {"]
+#[doc = "      \"title\": \"Name\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"graphene\","]
+#[doc = "        \"aerogel\","]
+#[doc = "        \"chemicalcatalyst\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"Name_Localised\": {"]
+#[doc = "      \"title\": \"Name_Localised\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"Chemical Catalyst\","]
+#[doc = "        \"Chemical Superbase\","]
+#[doc = "        \"Circuit Board\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"OwnerID\": {"]
+#[doc = "      \"title\": \"OwnerID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        0"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    }"]
+#[doc = "  },"]
+#[doc = "  \"additionalProperties\": false"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+#[serde(deny_unknown_fields)]
+pub struct ComponentsItem {
+    #[serde(rename = "Count")]
+    pub count: i64,
+    #[serde(
+        rename = "MissionID",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub mission_id: ::std::option::Option<i64>,
+    #[serde(rename = "Name")]
+    pub name: ::std::string::String,
+    #[serde(
+        rename = "Name_Localised",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub name_localised: ::std::option::Option<::std::string::String>,
+    #[serde(rename = "OwnerID")]
+    pub owner_id: i64,
+}
+impl ::std::convert::From<&ComponentsItem> for ComponentsItem {
+    fn from(value: &ComponentsItem) -> Self {
+        value.clone()
+    }
+}
+#[doc = "`ConsumablesItem`"]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"type\": \"object\","]
+#[doc = "  \"required\": ["]
+#[doc = "    \"Count\","]
+#[doc = "    \"Name\","]
+#[doc = "    \"OwnerID\""]
+#[doc = "  ],"]
+#[doc = "  \"properties\": {"]
+#[doc = "    \"Count\": {"]
+#[doc = "      \"title\": \"Count\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        100,"]
+#[doc = "        99,"]
+#[doc = "        97"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"Name\": {"]
+#[doc = "      \"title\": \"Name\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"healthpack\","]
+#[doc = "        \"energycell\","]
+#[doc = "        \"amm_grenade_emp\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"Name_Localised\": {"]
+#[doc = "      \"title\": \"Name_Localised\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"Medkit\","]
+#[doc = "        \"Energy Cell\","]
+#[doc = "        \"Shield Disruptor\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"OwnerID\": {"]
+#[doc = "      \"title\": \"OwnerID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        0"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    }"]
+#[doc = "  },"]
+#[doc = "  \"additionalProperties\": false"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+#[serde(deny_unknown_fields)]
+pub struct ConsumablesItem {
+    #[serde(rename = "Count")]
+    pub count: i64,
+    #[serde(rename = "Name")]
+    pub name: ::std::string::String,
+    #[serde(
+        rename = "Name_Localised",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub name_localised: ::std::option::Option<::std::string::String>,
+    #[serde(rename = "OwnerID")]
+    pub owner_id: i64,
+}
+impl ::std::convert::From<&ConsumablesItem> for ConsumablesItem {
+    fn from(value: &ConsumablesItem) -> Self {
+        value.clone()
+    }
+}
+#[doc = "`DataItem`"]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"type\": \"object\","]
+#[doc = "  \"required\": ["]
+#[doc = "    \"Count\","]
+#[doc = "    \"Name\","]
+#[doc = "    \"OwnerID\""]
+#[doc = "  ],"]
+#[doc = "  \"properties\": {"]
+#[doc = "    \"Count\": {"]
+#[doc = "      \"title\": \"Count\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        1,"]
+#[doc = "        3,"]
+#[doc = "        4"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"MissionID\": {"]
+#[doc = "      \"title\": \"MissionID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        779372801,"]
+#[doc = "        780055610,"]
+#[doc = "        783435673"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"Name\": {"]
+#[doc = "      \"title\": \"Name\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"virus\","]
+#[doc = "        \"slushfundlogs\","]
+#[doc = "        \"employeegeneticdata\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"Name_Localised\": {"]
+#[doc = "      \"title\": \"Name_Localised\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"Slush Fund Logs\","]
+#[doc = "        \"Employee Genetic Data\","]
+#[doc = "        \"Medical Records\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"OwnerID\": {"]
+#[doc = "      \"title\": \"OwnerID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        5352618,"]
+#[doc = "        0,"]
+#[doc = "        175185"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    }"]
+#[doc = "  },"]
+#[doc = "  \"additionalProperties\": false"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+#[serde(deny_unknown_fields)]
+pub struct DataItem {
+    #[serde(rename = "Count")]
+    pub count: i64,
+    #[serde(
+        rename = "MissionID",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub mission_id: ::std::option::Option<i64>,
+    #[serde(rename = "Name")]
+    pub name: ::std::string::String,
+    #[serde(
+        rename = "Name_Localised",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub name_localised: ::std::option::Option<::std::string::String>,
+    #[serde(rename = "OwnerID")]
+    pub owner_id: i64,
+}
+impl ::std::convert::From<&DataItem> for DataItem {
+    fn from(value: &DataItem) -> Self {
+        value.clone()
+    }
+}
+#[doc = "`ItemsItem`"]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"type\": \"object\","]
+#[doc = "  \"required\": ["]
+#[doc = "    \"Count\","]
+#[doc = "    \"Name\","]
+#[doc = "    \"OwnerID\""]
+#[doc = "  ],"]
+#[doc = "  \"properties\": {"]
+#[doc = "    \"Count\": {"]
+#[doc = "      \"title\": \"Count\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        1,"]
+#[doc = "        41,"]
+#[doc = "        8"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"MissionID\": {"]
+#[doc = "      \"title\": \"MissionID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        779192772,"]
+#[doc = "        784083658,"]
+#[doc = "        784158082"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    },"]
+#[doc = "    \"Name\": {"]
+#[doc = "      \"title\": \"Name\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"refinementprocesssample\","]
+#[doc = "        \"chemicalsample\","]
+#[doc = "        \"mutageniccatalyst\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"Name_Localised\": {"]
+#[doc = "      \"title\": \"Name_Localised\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"Refinement Process Sample\","]
+#[doc = "        \"Chemical Sample\","]
+#[doc = "        \"Mutagenic Catalyst\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"OwnerID\": {"]
+#[doc = "      \"title\": \"OwnerID\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        0,"]
+#[doc = "        2953036023,"]
+#[doc = "        5352618"]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"integer\""]
+#[doc = "    }"]
+#[doc = "  },"]
+#[doc = "  \"additionalProperties\": false"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+#[serde(deny_unknown_fields)]
+pub struct ItemsItem {
+    #[serde(rename = "Count")]
+    pub count: i64,
+    #[serde(
+        rename = "MissionID",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub mission_id: ::std::option::Option<i64>,
+    #[serde(rename = "Name")]
+    pub name: ::std::string::String,
+    #[serde(
+        rename = "Name_Localised",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub name_localised: ::std::option::Option<::std::string::String>,
+    #[serde(rename = "OwnerID")]
+    pub owner_id: i64,
+}
+impl ::std::convert::From<&ItemsItem> for ItemsItem {
+    fn from(value: &ItemsItem) -> Self {
+        value.clone()
+    }
+}
+#[doc = "Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed."]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"description\": \"Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.\","]
+#[doc = "  \"type\": \"object\","]
+#[doc = "  \"required\": ["]
+#[doc = "    \"event\","]
+#[doc = "    \"timestamp\""]
+#[doc = "  ],"]
+#[doc = "  \"properties\": {"]
+#[doc = "    \"Components\": {"]
+#[doc = "      \"title\": \"Components\","]
+#[doc = "      \"type\": \"array\","]
+#[doc = "      \"items\": {"]
+#[doc = "        \"type\": \"object\","]
+#[doc = "        \"required\": ["]
+#[doc = "          \"Count\","]
+#[doc = "          \"Name\","]
+#[doc = "          \"OwnerID\""]
+#[doc = "        ],"]
+#[doc = "        \"properties\": {"]
+#[doc = "          \"Count\": {"]
+#[doc = "            \"title\": \"Count\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              114,"]
+#[doc = "              2,"]
+#[doc = "              4"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"MissionID\": {"]
+#[doc = "            \"title\": \"MissionID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              836665448,"]
+#[doc = "              836922172,"]
+#[doc = "              836961350"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"Name\": {"]
+#[doc = "            \"title\": \"Name\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"graphene\","]
+#[doc = "              \"aerogel\","]
+#[doc = "              \"chemicalcatalyst\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"Name_Localised\": {"]
+#[doc = "            \"title\": \"Name_Localised\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"Chemical Catalyst\","]
+#[doc = "              \"Chemical Superbase\","]
+#[doc = "              \"Circuit Board\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"OwnerID\": {"]
+#[doc = "            \"title\": \"OwnerID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              0"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          }"]
+#[doc = "        },"]
+#[doc = "        \"additionalProperties\": false"]
+#[doc = "      }"]
+#[doc = "    },"]
+#[doc = "    \"Consumables\": {"]
+#[doc = "      \"title\": \"Consumables\","]
+#[doc = "      \"type\": \"array\","]
+#[doc = "      \"items\": {"]
+#[doc = "        \"type\": \"object\","]
+#[doc = "        \"required\": ["]
+#[doc = "          \"Count\","]
+#[doc = "          \"Name\","]
+#[doc = "          \"OwnerID\""]
+#[doc = "        ],"]
+#[doc = "        \"properties\": {"]
+#[doc = "          \"Count\": {"]
+#[doc = "            \"title\": \"Count\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              100,"]
+#[doc = "              99,"]
+#[doc = "              97"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"Name\": {"]
+#[doc = "            \"title\": \"Name\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"healthpack\","]
+#[doc = "              \"energycell\","]
+#[doc = "              \"amm_grenade_emp\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"Name_Localised\": {"]
+#[doc = "            \"title\": \"Name_Localised\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"Medkit\","]
+#[doc = "              \"Energy Cell\","]
+#[doc = "              \"Shield Disruptor\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"OwnerID\": {"]
+#[doc = "            \"title\": \"OwnerID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              0"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          }"]
+#[doc = "        },"]
+#[doc = "        \"additionalProperties\": false"]
+#[doc = "      }"]
+#[doc = "    },"]
+#[doc = "    \"Data\": {"]
+#[doc = "      \"title\": \"Data\","]
+#[doc = "      \"type\": \"array\","]
+#[doc = "      \"items\": {"]
+#[doc = "        \"type\": \"object\","]
+#[doc = "        \"required\": ["]
+#[doc = "          \"Count\","]
+#[doc = "          \"Name\","]
+#[doc = "          \"OwnerID\""]
+#[doc = "        ],"]
+#[doc = "        \"properties\": {"]
+#[doc = "          \"Count\": {"]
+#[doc = "            \"title\": \"Count\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              1,"]
+#[doc = "              3,"]
+#[doc = "              4"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"MissionID\": {"]
+#[doc = "            \"title\": \"MissionID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              779372801,"]
+#[doc = "              780055610,"]
+#[doc = "              783435673"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"Name\": {"]
+#[doc = "            \"title\": \"Name\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"virus\","]
+#[doc = "              \"slushfundlogs\","]
+#[doc = "              \"employeegeneticdata\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"Name_Localised\": {"]
+#[doc = "            \"title\": \"Name_Localised\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"Slush Fund Logs\","]
+#[doc = "              \"Employee Genetic Data\","]
+#[doc = "              \"Medical Records\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"OwnerID\": {"]
+#[doc = "            \"title\": \"OwnerID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              5352618,"]
+#[doc = "              0,"]
+#[doc = "              175185"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          }"]
+#[doc = "        },"]
+#[doc = "        \"additionalProperties\": false"]
+#[doc = "      }"]
+#[doc = "    },"]
+#[doc = "    \"Items\": {"]
+#[doc = "      \"title\": \"Items\","]
+#[doc = "      \"type\": \"array\","]
+#[doc = "      \"items\": {"]
+#[doc = "        \"type\": \"object\","]
+#[doc = "        \"required\": ["]
+#[doc = "          \"Count\","]
+#[doc = "          \"Name\","]
+#[doc = "          \"OwnerID\""]
+#[doc = "        ],"]
+#[doc = "        \"properties\": {"]
+#[doc = "          \"Count\": {"]
+#[doc = "            \"title\": \"Count\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              1,"]
+#[doc = "              41,"]
+#[doc = "              8"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"MissionID\": {"]
+#[doc = "            \"title\": \"MissionID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              779192772,"]
+#[doc = "              784083658,"]
+#[doc = "              784158082"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          },"]
+#[doc = "          \"Name\": {"]
+#[doc = "            \"title\": \"Name\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"refinementprocesssample\","]
+#[doc = "              \"chemicalsample\","]
+#[doc = "              \"mutageniccatalyst\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"Name_Localised\": {"]
+#[doc = "            \"title\": \"Name_Localised\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              \"Refinement Process Sample\","]
+#[doc = "              \"Chemical Sample\","]
+#[doc = "              \"Mutagenic Catalyst\""]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"string\""]
+#[doc = "          },"]
+#[doc = "          \"OwnerID\": {"]
+#[doc = "            \"title\": \"OwnerID\","]
+#[doc = "            \"examples\": ["]
+#[doc = "              0,"]
+#[doc = "              2953036023,"]
+#[doc = "              5352618"]
+#[doc = "            ],"]
+#[doc = "            \"type\": \"integer\""]
+#[doc = "          }"]
+#[doc = "        },"]
+#[doc = "        \"additionalProperties\": false"]
+#[doc = "      }"]
+#[doc = "    },"]
+#[doc = "    \"event\": {"]
+#[doc = "      \"title\": \"event\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"AfmuRepairs\","]
+#[doc = "        \"FSDJump\","]
+#[doc = "        \"Location\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\""]
+#[doc = "    },"]
+#[doc = "    \"timestamp\": {"]
+#[doc = "      \"title\": \"timestamp\","]
+#[doc = "      \"description\": \"Timestamp in UTC, ISO 8601\","]
+#[doc = "      \"examples\": ["]
+#[doc = "        \"2022-09-11T22:00:45Z\","]
+#[doc = "        \"2022-09-12T08:54:21Z\","]
+#[doc = "        \"2022-09-12T08:54:24Z\""]
+#[doc = "      ],"]
+#[doc = "      \"type\": \"string\","]
+#[doc = "      \"format\": \"date-time\""]
+#[doc = "    }"]
+#[doc = "  },"]
+#[doc = "  \"additionalProperties\": false"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+#[serde(deny_unknown_fields)]
+pub struct ShipLocker {
+    #[serde(
+        rename = "Components",
+        default,
+        skip_serializing_if = "::std::vec::Vec::is_empty"
+    )]
+    pub components: ::std::vec::Vec<ComponentsItem>,
+    #[serde(
+        rename = "Consumables",
+        default,
+        skip_serializing_if = "::std::vec::Vec::is_empty"
+    )]
+    pub consumables: ::std::vec::Vec<ConsumablesItem>,
+    #[serde(
+        rename = "Data",
+        default,
+        skip_serializing_if = "::std::vec::Vec::is_empty"
+    )]
+    pub data: ::std::vec::Vec<DataItem>,
+    #[serde(skip_deserializing, default = "ShipLocker::event_value")]
+    pub event: String,
+    #[serde(
+        rename = "Items",
+        default,
+        skip_serializing_if = "::std::vec::Vec::is_empty"
+    )]
+    pub items: ::std::vec::Vec<ItemsItem>,
+    #[doc = "Timestamp in UTC, ISO 8601"]
+    pub timestamp: ::chrono::DateTime<::chrono::offset::Utc>,
+}
+impl ::std::convert::From<&ShipLocker> for ShipLocker {
+    fn from(value: &ShipLocker) -> Self {
+        value.clone()
+    }
+}
+
+impl ShipLocker {
+    pub fn event_value() -> ::std::string::String {
+        "ShipLocker".to_string()
+    }
+}
