@@ -322,7 +322,7 @@ dependencies = [
 
 [[package]]
 name = "noot_core"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -525,7 +525,7 @@ dependencies = [
 
 [[package]]
 name = "raxxla"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "crossbeam",
