@@ -38,6 +38,7 @@ jobs:
           args: --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
+          working-directory: raxxla
       - name: Upload wheels
         uses: actions/upload-artifact@v5
         with:
@@ -63,6 +64,7 @@ jobs:
           args: --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: musllinux_1_2
+          working-directory: raxxla
       - name: Upload wheels
         uses: actions/upload-artifact@v5
         with:
@@ -89,6 +91,7 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: --release --out dist --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
+          working-directory: raxxla
       - name: Upload wheels
         uses: actions/upload-artifact@v5
         with:
@@ -102,6 +105,7 @@ jobs:
       - name: Build sdist
         uses: PyO3/maturin-action@v1
         with:
+          working-directory: raxxla
           command: sdist
           args: --out dist
       - name: Upload sdist
