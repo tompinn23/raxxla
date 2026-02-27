@@ -6,9 +6,10 @@ use std::collections::{HashMap, HashSet};
 
 #[cfg(feature = "python")]
 use pyo3::pyclass;
+use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct ModuleModifier {
     pub label: String,
     pub less_is_good: Option<i64>,
@@ -45,7 +46,7 @@ impl From<&engineer_craft::ModifiersItem> for ModuleModifier {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct ModuleEngineering {
     pub blueprint_id: i64,
     pub blueprint_name: String,
@@ -79,7 +80,7 @@ impl From<Engineering> for ModuleEngineering {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct FuelTanks {
     pub main: f64,
     pub reserve: f64,
@@ -91,7 +92,7 @@ impl FuelTanks {
     }
 }
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Module {
     pub ammo_in_clip: Option<i64>,
     pub ammo_in_hopper: Option<i64>,
@@ -121,7 +122,7 @@ impl From<&ModulesItem> for Module {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Suit {
     pub suit_id: i64,
     pub edmc_name: String,
@@ -132,7 +133,7 @@ pub struct Suit {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct SuitLoadout {
     pub loadout_slot_id: i64,
     pub current_suit: Suit,
@@ -141,7 +142,7 @@ pub struct SuitLoadout {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct BackpackContents {
     pub component: HashMap<String, i32>,
     pub consumable: HashMap<String, i32>,
@@ -150,7 +151,7 @@ pub struct BackpackContents {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct PowerplayInfo {
     pub power: Option<String>,
     pub rank: Option<i32>,
@@ -160,14 +161,14 @@ pub struct PowerplayInfo {
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub enum EngineerProgress {
     Ranked(i32, i32),
     Progress(String),
 }
 
 #[cfg_attr(feature = "python", pyclass(frozen, skip_from_py_object))]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct GameState {
     // File header
     pub game_language: Option<String>,

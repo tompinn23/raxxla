@@ -814,7 +814,7 @@ pub use wing_invite::WingInvite;
 pub mod wing_join;
 pub use wing_join::WingJoin;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(tag = "event")]
 pub enum JournalEvent {
     ApproachBody(ApproachBody),
